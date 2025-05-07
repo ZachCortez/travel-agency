@@ -26,7 +26,7 @@ export const storeUserData = async () => {
             ? await getGooglePicture(providerAccessToken)
             : null;
 
-        const newUser = await database.createDocument(
+        const createdUser = await database.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             ID.unique(),
@@ -39,7 +39,7 @@ export const storeUserData = async () => {
             }
         );
 
-        if (!newUser.$id) redirect("/sign-in");
+        if (!createdUser.$id) redirect("/sign-in");
     } catch (error) {
         console.error("Error storing user data:", error);
     }
@@ -65,8 +65,8 @@ export const loginWithGoogle = async () => {
     try {
         account.createOAuth2Session(
             OAuthProvider.Google,
-            `${window.location.origin}/`,
-            `${window.location.origin}/404`
+            `${window.location.origin}/`,  // success redirect
+            `${window.location.origin}/auth-failure`   // failure redirect
         );
     } catch (error) {
         console.error("Error during OAuth2 session creation:", error);
